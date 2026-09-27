@@ -1,4 +1,4 @@
-git clone https://github.com/TON-COMPTE/TON-DEPOT.git
+git clone https://github.com/wakiko888/projet.git
 cd TON-DEPOT
 
 Commande permettant de Cloner le projet sur le pc
@@ -6,7 +6,7 @@ Commande permettant de Cloner le projet sur le pc
 cd C:\chemin\vers\le\projet
 git pull
 
-Commande permettant d'actualiser l'avancement du projet
+Commande permettant d'actualiser l'avancement du projet (si le projet est déja cloner sur le pc)
 
 py -0
 
