@@ -9,11 +9,7 @@ y_MainCharacter = 60
 x_speed_MainCharacter = 0
 y_speed_MainCharacter = 0
 
-# =========================================================
-# == UPDATE
-# =========================================================
 def update():
-    """mise à jour des variables (30 fois par seconde)"""
     global x_MainCharacter, y_MainCharacter, x_speed_MainCharacter, y_speed_MainCharacter
 
     if pyxel.btn(pyxel.KEY_LEFT):
@@ -45,14 +41,7 @@ def update():
 
     
 
-
-
-# =========================================================
-# == DRAW
-# =========================================================
 def draw():
-    """création des objets (30 fois par seconde)"""
-    # vide la fenetre
     pyxel.cls(0)
     pyxel.blt(x_MainCharacter, y_MainCharacter, 0, 0, 0, 16, 16, 0)
 pyxel.run(update, draw)
