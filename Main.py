@@ -44,4 +44,5 @@ def update():
 def draw():
     pyxel.cls(0)
     pyxel.blt(x_MainCharacter, y_MainCharacter, 0, 0, 0, 16, 16, 0)
+    pyxel.blt(x_MainCharacter, y_MainCharacter, 1, 0, 0, 16, 16, 0)
 pyxel.run(update, draw)
