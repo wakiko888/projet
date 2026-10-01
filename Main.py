@@ -8,6 +8,11 @@ x_MainCharacter = 60
 y_MainCharacter = 60
 x_speed_MainCharacter = 0
 y_speed_MainCharacter = 0
+HitBox_MainCharacter_width = 7
+HitBox_MainCharacter_length = 12
+Ligne_x = 12
+Ligne_y = 123
+Ligne_length = 15
 
 def update():
     global x_MainCharacter, y_MainCharacter, x_speed_MainCharacter, y_speed_MainCharacter
@@ -34,10 +39,16 @@ def update():
         y_speed_MainCharacter += World.Gravity
     else:
         y_speed_MainCharacter = World.Fall_MaxSpeed 
-    
+    Is_colliding = y_MainCharacter + HitBox_MainCharacter_width > Ligne_y and ((x_MainCharacter > Ligne_x and x_MainCharacter < Ligne_x + Ligne_length) or (x_MainCharacter + HitBox_MainCharacter_width > Ligne_x and x_MainCharacter + HitBox_MainCharacter_width < Ligne_x + Ligne_length))
+    if Is_colliding == True:
+        y_MainCharacter = Ligne_y
+        y_speed_MainCharacter = 0
+        Is_colliding = False
+
 
     x_MainCharacter += x_speed_MainCharacter
-    y_MainCharacter += y_speed_MainCharacter
+    if Is_colliding == False:
+        y_MainCharacter += y_speed_MainCharacter
 
     
 
@@ -45,4 +56,6 @@ def draw():
     pyxel.cls(0)
     pyxel.blt(x_MainCharacter, y_MainCharacter, 0, 0, 0, 16, 16, 0)
     pyxel.blt(x_MainCharacter, y_MainCharacter, 1, 0, 0, 16, 16, 0)
+    pyxel.blt(Ligne_x, Ligne_y, 1, 16, 7, 15, 1, 0)
+
 pyxel.run(update, draw)
