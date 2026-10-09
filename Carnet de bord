@@ -1,0 +1,23 @@
+Creation du systeme de mouvement, de gravite et de collision ( Joachim ) 
+Creation du Carnet de Bord (Richard)
+--Changement--
+Rename de la fonction qui definit la hauteur de la hitbox de "HitBox_MainCharacter_length" => "HitBox_MainCharacter_height" {Richard}
+
+
+
+## BUG ##
+Lorsque le perso passe sous la plaforme "ligne", il se retrouve teleporté en dessous de la plaforme. Il reste collé sur le dessous de la ligne ( sans contact direct )
+Cf googledrive pour un screen
+=> Piste de solution : Changer de 
+                                  if Is_colliding == True:
+                                    y_MainCharacter = Ligne_y
+                                    y_speed_MainCharacter = 0
+                                    Is_colliding = False
+=>                                  
+                                if Is_colliding == True:
+                                  y_MainCharacter = Ligne_y - HitBox_MainCharacter_height
+                                  y_speed_MainCharacter = 0
+                                  Is_colliding = False
+/!\ on obtient un bug de collison ou on glich dans la plaforme
+
+=> Piste de solution du prof : Utiliser le pget(x,y) 
