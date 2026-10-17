@@ -17,20 +17,22 @@ Ligne1.length = 15
 '''
 
 Mc = Class.character(60, 60, 7, 12)
+collider = Class.collider()
 
 Ligne1 = Class.line(12, 70, 15)
 def update():
     Mc.Is_jumping = False
     Mc.Is_colliding = False
     if pyxel.btn(pyxel.KEY_LEFT):
-        Mc.x_speed = -10
+        Mc.x_speed = -5
     if pyxel.btn(pyxel.KEY_RIGHT):
-        Mc.x_speed = 10
+        Mc.x_speed = 5
     if pyxel.btnp(pyxel.KEY_UP):
         Mc.Is_jumping = True
         Mc.y_speed = -15
 
-    Mc.Is_colliding = (Mc.y + Mc.HitBox_height > Ligne1.y - 16) and ((Mc.x > Ligne1.x and Mc.x < Ligne1.x + Ligne1.length) or (Mc.x + Mc.HitBox_width > Ligne1.x and Mc.x + Mc.HitBox_width < Ligne1.x + Ligne1.length))
+    Mc.Is_colliding = collider.Rect_up_line(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, Ligne1.x, Ligne1.y, Ligne1.length)
+
     if Mc.Is_colliding == False:
         if Mc.x_speed > 0:
             if Mc.x_speed-World.Air_friction < 0:
