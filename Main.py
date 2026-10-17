@@ -1,61 +1,83 @@
 import pyxel
 import World
+import Class
 
 pyxel.init(128, 128, title="LF") #initie la fenetre
 pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
+'''
+Mc.x = 60
+Mc.y = 60
+Mc.x_speed = 0
+Mc.y_speed = 0
+Mc.HitBox_width = 7
+Mc.HitBox_height = 12
+Ligne1.x = 12
+Ligne1.y = 70
+Ligne1.length = 15
+'''
 
-x_MainCharacter = 60
-y_MainCharacter = 60
-x_speed_MainCharacter = 0
-y_speed_MainCharacter = 0
-HitBox_MainCharacter_width = 7
-HitBox_MainCharacter_length = 12
-Ligne_x = 12
-Ligne_y = 123
-Ligne_length = 15
+Mc = Class.character(60, 60, 7, 12)
 
+Ligne1 = Class.line(12, 70, 15)
 def update():
-    global x_MainCharacter, y_MainCharacter, x_speed_MainCharacter, y_speed_MainCharacter
-
+    Mc.Is_jumping = False
+    Mc.Is_colliding = False
     if pyxel.btn(pyxel.KEY_LEFT):
-        x_speed_MainCharacter = -10
+        Mc.x_speed = -10
     if pyxel.btn(pyxel.KEY_RIGHT):
-        x_speed_MainCharacter = 10
+        Mc.x_speed = 10
     if pyxel.btnp(pyxel.KEY_UP):
-        y_speed_MainCharacter = -15
+        Mc.Is_jumping = True
+        Mc.y_speed = -15
 
-    if x_speed_MainCharacter > 0:
-        if x_speed_MainCharacter-World.Air_friction < 0:
-            x_speed_MainCharacter = 0
-        else:
-            x_speed_MainCharacter -= World.Air_friction
-    if x_speed_MainCharacter < 0:
-        if x_speed_MainCharacter+World.Air_friction > 0:
-            x_speed_MainCharacter = 0
-        else:
-            x_speed_MainCharacter += World.Air_friction
+    Mc.Is_colliding = (Mc.y + Mc.HitBox_height > Ligne1.y - 16) and ((Mc.x > Ligne1.x and Mc.x < Ligne1.x + Ligne1.length) or (Mc.x + Mc.HitBox_width > Ligne1.x and Mc.x + Mc.HitBox_width < Ligne1.x + Ligne1.length))
+    if Mc.Is_colliding == False:
+        if Mc.x_speed > 0:
+            if Mc.x_speed-World.Air_friction < 0:
+                Mc.x_speed = 0
+            else:
+                Mc.x_speed -= World.Air_friction
+        if Mc.x_speed < 0:
+            if Mc.x_speed+World.Air_friction > 0:
+                Mc.x_speed = 0
+            else:
+                Mc.x_speed += World.Air_friction
 
-    if y_speed_MainCharacter < World.Fall_MaxSpeed:
-        y_speed_MainCharacter += World.Gravity
+        if Mc.y_speed < World.Fall_MaxSpeed:
+            Mc.y_speed += World.Gravity
+        else:
+            Mc.y_speed = World.Fall_MaxSpeed 
+
     else:
-        y_speed_MainCharacter = World.Fall_MaxSpeed 
-    Is_colliding = y_MainCharacter + HitBox_MainCharacter_width > Ligne_y and ((x_MainCharacter > Ligne_x and x_MainCharacter < Ligne_x + Ligne_length) or (x_MainCharacter + HitBox_MainCharacter_width > Ligne_x and x_MainCharacter + HitBox_MainCharacter_width < Ligne_x + Ligne_length))
-    if Is_colliding == True:
-        y_MainCharacter = Ligne_y
-        y_speed_MainCharacter = 0
-        Is_colliding = False
+        if Mc.x_speed > 0:
+            if Mc.x_speed-World.Ground_Friction < 0:
+                Mc.x_speed = 0
+            else:
+                Mc.x_speed -= World.Ground_Friction
+        if Mc.x_speed < 0:
+            if Mc.x_speed+World.Ground_Friction > 0:
+                Mc.x_speed = 0
+            else:
+                Mc.x_speed += World.Ground_Friction
 
+    if Mc.Is_colliding == True:
+        Mc.y = Ligne1.y - 16
+        if Mc.Is_jumping == False:
+            Mc.y_speed = 0
+        Mc.Is_colliding = False
 
-    x_MainCharacter += x_speed_MainCharacter
-    if Is_colliding == False:
-        y_MainCharacter += y_speed_MainCharacter
+    Mc.x += Mc.x_speed        
+    if Mc.Is_colliding == False:
+        Mc.y += Mc.y_speed
+    elif Mc.Is_jumping == True:
+        Mc.y += Mc.y_speed
 
     
 
 def draw():
     pyxel.cls(0)
-    pyxel.blt(x_MainCharacter, y_MainCharacter, 0, 0, 0, 16, 16, 0)
-    pyxel.blt(x_MainCharacter, y_MainCharacter, 1, 0, 0, 16, 16, 0)
-    pyxel.blt(Ligne_x, Ligne_y, 1, 16, 7, 15, 1, 0)
+    pyxel.blt(Mc.x, Mc.y, 0, 0, 0, 16, 16, 0)
+    pyxel.blt(Mc.x, Mc.y, 1, 0, 0, 16, 16, 0)
+    pyxel.blt(Ligne1.x, Ligne1.y, 1, 16, 7, 15, 1, 0)
 
 pyxel.run(update, draw)
