@@ -19,9 +19,42 @@ class line:
 
 class collider:
 
-    def Rect_up_line(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_lentgh):
-        #va verfier si un rectangle (objet 1) est dans ou dessus une ligne (objet 2)
-        if (Obj_1_y + Obj_1_height > Obj_2_y - 16) and ((Obj_1_x > Obj_2_x and Obj_1_x < Obj_2_x + Obj_2_lentgh) or (Obj_1_x + Obj_1_width > Obj_2_x and Obj_1_x + Obj_1_width < Obj_2_x + Obj_2_lentgh)):
+    def Rect_up_line(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_length):
+        #va verfier si un rectangle (objet 1) est dans ou dessus une ligne horizontal (objet 2)
+        if (Obj_1_y + Obj_1_height > Obj_2_y - 16) and ((Obj_1_x > Obj_2_x and Obj_1_x < Obj_2_x + Obj_2_length) or (Obj_1_x + Obj_1_width > Obj_2_x and Obj_1_x + Obj_1_width < Obj_2_x + Obj_2_length)):
             return True
         else:
             return False
+    
+    def Rect_to_rect(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
+        cond1 = Obj_1_x + Obj_1_width > Obj_2_x
+        cond2 = Obj_1_x < Obj_2_x + Obj_2_width
+        cond3 = Obj_1_y + Obj_1_height > Obj_2_y
+        cond4 = Obj_1_y < Obj_2_y + Obj_2_height
+        if (cond1 and cond2 and cond3 and cond4):
+            print(
+                cond1, cond2, cond3, cond4
+            )
+            return True
+        else :
+            print(
+                cond1, cond2, cond3, cond4
+            )
+            return False
+    
+    def Point_to_rect(self, Obj_1_x, Obj_1_y, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
+        cond1 = Obj_1_x > Obj_2_x
+        cond2 = Obj_1_y > Obj_2_y
+        cond3 = Obj_1_x < Obj_2_x + Obj_2_width
+        cond4 = Obj_1_y < Obj_2_y + Obj_2_height
+        if (cond1 and cond2 and cond3 and cond4):
+            print(
+                cond1, cond2, cond3, cond4
+            )
+            return True
+        else :
+            print(
+                cond1, cond2, cond3, cond4
+            )
+            return False
+    
