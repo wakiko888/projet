@@ -9,7 +9,7 @@ Mc.x = 60
 Mc.y = 60
 Mc.x_speed = 0
 Mc.y_speed = 0
-Mc.HitBox_width = 7
+Mc.HitBox_width = 10
 Mc.HitBox_height = 12
 Ligne1.x = 12
 Ligne1.y = 70
@@ -77,7 +77,8 @@ def update():
 def draw():
     pyxel.cls(0)
     pyxel.blt(Mc.x, Mc.y, 0, 0, 0, 16, 16, 0)
-    pyxel.blt(Mc.x, Mc.y, 1, 0, 0, 16, 16, 0)
+    pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
+    pyxel.rectb(Mc.x - 15, Mc.y-15, Mc.Load_collision_box_width, Mc.Load_collision_box_height, 8) #Load_collision_box (sert a load quel collision detecter)
     pyxel.blt(Ligne1.x, Ligne1.y, 1, 16, 7, 15, 1, 0)
 
 pyxel.run(update, draw)

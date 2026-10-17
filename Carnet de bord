@@ -8,6 +8,9 @@ Rename de la fonction qui definit la hauteur de la hitbox de "HitBox_MainCharact
 ## BUG ##
 Lorsque le perso passe sous la plaforme "ligne", il se retrouve teleporté en dessous de la plaforme. Il reste collé sur le dessous de la ligne ( sans contact direct )
 Cf googledrive pour un screen
+
+#note : le fait que le joueur se tp quand il est dessous est une feature volontaire ⚠️ (c'est pour faire un sol ou on peux pas aller plus bas)
+
 => Piste de solution : Changer de 
                                   if Is_colliding == True:
                                     y_MainCharacter = Ligne_y
