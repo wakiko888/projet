@@ -8,14 +8,17 @@ class character:
         self.y_speed = 0
         self.Is_jumping = False
         self.Is_colliding = False
+        self.Is_on_top = False
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
 
-class line:
-    def __init__(self, x, y, length):
+class block:
+    def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
-        self.length = length
+        self.width = width
+        self.height = height
+
 
 class collider:
 
