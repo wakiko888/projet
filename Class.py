@@ -12,12 +12,26 @@ class character:
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
 
-class block:
+class bloc:
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+    def draw(self):
+        pyxel.rect(self.x, self.y, self.width, self.height, 5)
+
+class blocs_managing:
+    def __init__(self):
+        self.blocs = []
+
+    def set_block(self, x, y, width, height):
+        Bloc = bloc(x, y, width, height)
+        self.blocs.append(bloc)
+
+    def draw_all_blocs(self):
+        for bloc in self.blocs:
+            bloc.draw()
 
 
 class collider:
