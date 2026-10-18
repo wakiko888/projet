@@ -1,3 +1,4 @@
+import pyxel
 class character:
     def __init__(self, x, y, HitBox_width, HitBox_height):
         self.x = x
@@ -18,6 +19,7 @@ class bloc:
         self.y = y
         self.width = width
         self.height = height
+
     def draw(self):
         pyxel.rect(self.x, self.y, self.width, self.height, 5)
 
@@ -26,12 +28,12 @@ class blocs_managing:
         self.blocs = []
 
     def set_block(self, x, y, width, height):
-        Bloc = bloc(x, y, width, height)
-        self.blocs.append(bloc)
+        nouveau_bloc = bloc(x, y, width, height)
+        self.blocs.append(nouveau_bloc)
 
     def draw_all_blocs(self):
-        for bloc in self.blocs:
-            bloc.draw()
+        for bloc_actuel in self.blocs:
+            bloc_actuel.draw()
 
 
 class collider:

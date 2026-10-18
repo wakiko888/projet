@@ -14,15 +14,18 @@ def update():
     Mc.Is_jumping = False
     Mc.Is_colliding = False
     if pyxel.btn(pyxel.KEY_LEFT):
-        Mc.x_speed = -5
+        Mc.x_speed = -10
     if pyxel.btn(pyxel.KEY_RIGHT):
-        Mc.x_speed = 5
+        Mc.x_speed = 10
     if pyxel.btnp(pyxel.KEY_UP):
         Mc.Is_jumping = True
         Mc.y_speed = -15
 
     Mbloc.set_block(12, 70, 15, 1)
     Mbloc.set_block(50, 85, 15, 10)
+
+    Mc.x += Mc.x_speed
+    Mc.y += Mc.y_speed
 
     '''
     Mc.Is_colliding = collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, block1.x, block1.y, block1.width, block1.height)
