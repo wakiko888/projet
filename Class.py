@@ -84,7 +84,7 @@ class collider:
             return False
 
 class world:
-    def __init__(Gravity, Ground_Friction, Air_friction, Fall_MaxSpeed):
+    def __init__(self, Gravity, Ground_Friction, Air_friction, Fall_MaxSpeed):
         self.Gravity = Gravity
         self.Ground_Friction = Ground_Friction
         self.Air_friction = Air_friction

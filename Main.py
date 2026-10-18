@@ -8,31 +8,51 @@ pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
 Mc = Class.character(60, 60, 7, 12) #cree une instance de la classe character (qui sera notre Main character (Mc))
 collider = Class.collider() #cree une instance de la classe collider pour utiliser le collider
 Mbloc = Class.blocs_managing() #cree une instance
+World = Class.world(2.0, 3.0, 3, 7.0)
 
-Mbloc.set_block(12, 70, 15, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
+Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
 Mbloc.set_block(50, 85, 15, 10)
 
 
 def update(): #fonction update
     if pyxel.btn(pyxel.KEY_LEFT): #rajout de vitesse pour chaque flèche
-        Mc.x_speed = -1
+        Mc.x_speed = -10
     if pyxel.btn(pyxel.KEY_RIGHT):
-        Mc.x_speed = 1
-    if pyxel.btn(pyxel.KEY_UP):
-        Mc.y_speed = -1
+        Mc.x_speed = 10
+    if pyxel.btnp(pyxel.KEY_UP):
+        Mc.y_speed = -15
     if pyxel.btn(pyxel.KEY_DOWN):
-        Mc.y_speed = +1
+        Mc.y_speed = +15
+
+    if Mc.Is_on_top == True:
+        friction = World.Ground_Friction
+    else:
+        friction = World.Air_friction
+
+    if Mc.y_speed < World.Fall_MaxSpeed:
+        Mc.y_speed += World.Gravity
+
+    if Mc.x_speed > friction:
+        Mc.x_speed -= friction
+
+    elif Mc.x_speed < -friction:
+        Mc.x_speed += friction
+    
+    else:
+        Mc.x_speed = 0
 
     Mc.y += Mc.y_speed #aplique les vitesses verticales
 
     Mc.Is_colliding = False
     Mc.who_collide = "none"
+    Mc.Is_on_top = False
 
     for bloc in Mbloc.blocs:
             if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
                 if collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
                     Mc.Is_colliding = True
                     Mc.who_collide = bloc
+                    Mc.Is_on_top = True
                     break
 
     if Mc.Is_colliding == True and Mc.y_speed > 0:
@@ -53,7 +73,9 @@ def update(): #fonction update
                 if collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
                     Mc.Is_colliding = True
                     Mc.who_collide = bloc
+                    Mc.Is_on_top = True
                     break
+
     if Mc.Is_colliding == True and Mc.x_speed > 0:
         Mc.x = Mc.who_collide.x - Mc.HitBox_width
         Mc.x_speed = 0
@@ -61,11 +83,6 @@ def update(): #fonction update
     if Mc.Is_colliding == True and Mc.x_speed < 0:
         Mc.x = Mc.who_collide.x + Mc.who_collide.width
         Mc.x_speed = 0
-
-    #temporaire
-    Mc.x_speed = 0
-    Mc.y_speed = 0
-    #temporaire
 
 def draw():
     pyxel.cls(0) #efface l'ecran
