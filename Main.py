@@ -1,8 +1,8 @@
 import pyxel
 import World
 import Class
-screen_x = 128 #defini la taille de l'ecran
-screen_y = 128
+screen_x = 256 #defini la taille de l'ecran
+screen_y = 256
 pyxel.init(screen_x, screen_y, title="LF") #initie la fenetre
 pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
 
