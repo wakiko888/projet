@@ -11,6 +11,7 @@ class character: #classe pour tout les personnages
         self.Is_jumping = False
         self.Is_colliding = False
         self.Is_on_top = False
+        self.who_collide = "none"
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
 

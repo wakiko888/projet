@@ -9,6 +9,10 @@ Mc = Class.character(60, 60, 7, 12) #cree une instance de la classe character (q
 collider = Class.collider() #cree une instance de la classe collider pour utiliser le collider
 Mbloc = Class.blocs_managing() #cree une instance
 
+Mbloc.set_block(12, 70, 15, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
+Mbloc.set_block(50, 85, 15, 10)
+
+
 def update(): #fonction update
     if pyxel.btn(pyxel.KEY_LEFT): #rajout de vitesse pour chaque flèche
         Mc.x_speed = -1
@@ -19,18 +23,22 @@ def update(): #fonction update
     if pyxel.btn(pyxel.KEY_DOWN):
         Mc.y_speed = +1
 
-    Mbloc.set_block(12, 70, 15, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
-    Mbloc.set_block(50, 85, 15, 10)
+    Mc.x += Mc.x_speed #aplique les vitesses verticales
+    Mc.y += Mc.y_speed #aplique les vitesses horizontales
+
+    Mc.Is_colliding = False
+    Mc.who_collide = "none"
 
     for bloc in Mbloc.blocs:
             if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
                 if collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                    print("collsion")
-                else:
-                    print("pas collisionm")
+                    Mc.Is_colliding = True
+                    Mc.who_collide = bloc
+                    break
 
-    Mc.x += Mc.x_speed #aplique les vitesses verticales
-    Mc.y += Mc.y_speed #aplique les vitesses horizontales
+    if Mc.Is_colliding == True and Mc.y_speed > 0:
+        Mc.y = Mc.who_collide.y - Mc.HitBox_height
+        Mc.y_speed = 0
 
     #temporaire
     Mc.x_speed = 0
@@ -89,8 +97,8 @@ def update(): #fonction update
 
 def draw():
     pyxel.cls(0) #efface l'ecran
-    pyxel.blt(Mc.x, Mc.y, 0, 0, 0, 16, 16, 0)#dessinne le personnage en allant chercher son sprite
-    pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
+    pyxel.rectb(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, 5)#dessinne le personnage
+    #pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
     Mbloc.draw_all_blocs() #dessinne tout les blocs dans la liste de blocs (blocs[])
     pyxel.circb(Mc.x + 7, Mc.y + 9, 50, 5) #dessinne le rayon dans lequels les collsions seront chargées
 
