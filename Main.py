@@ -90,7 +90,7 @@ def update(): #fonction update
 
 def draw():
     pyxel.cls(0) #efface l'ecran
-    if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+    if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT): #fais dire au mc le texte quand on clic gauche
         Mc.speak("je suis moi et uniquement moi mais appel moi par mon nom", "fr")
     pyxel.rectb(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, 5)#dessinne le personnage
     #pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
