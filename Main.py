@@ -67,56 +67,6 @@ def update(): #fonction update
     Mc.y_speed = 0
     #temporaire
 
-    '''
-    Mc.Is_colliding = collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, block1.x, block1.y, block1.width, block1.height)
-    Mc.Is_on_top = collider.Rect_to_rect(Mc.x, Mc.y-1, Mc.HitBox_width, Mc.HitBox_height, block1.x, block1.y, block1.width, block1.height)
-    print(Mc.Is_on_top)
-    if Mc.Is_colliding == False and Mc.Is_on_top == False:
-        if Mc.x_speed > 0:
-            if Mc.x_speed-World.Air_friction < 0:
-                Mc.x_speed = 0
-            else:
-                Mc.x_speed -= World.Air_friction
-        if Mc.x_speed < 0:
-            if Mc.x_speed+World.Air_friction > 0:
-                Mc.x_speed = 0
-            else:
-                Mc.x_speed += World.Air_friction
-
-        if Mc.y_speed < World.Fall_MaxSpeed:
-            Mc.y_speed += World.Gravity
-        else:
-            Mc.y_speed = World.Fall_MaxSpeed 
-
-    else:
-        if Mc.x_speed > 0:
-            if Mc.x_speed-World.Ground_Friction < 0:
-                Mc.x_speed = 0
-            else:
-                Mc.x_speed -= World.Ground_Friction
-        if Mc.x_speed < 0:
-            if Mc.x_speed+World.Ground_Friction > 0:
-                Mc.x_speed = 0
-            else:
-                Mc.x_speed += World.Ground_Friction
-
-    if Mc.Is_colliding == True:
-        Mc.y = block1.y - 16
-        if Mc.Is_jumping == False:
-            Mc.y_speed = 0
-        Mc.Is_colliding = False
-
-    Mc.x += Mc.x_speed        
-    if Mc.Is_colliding == False and Mc.Is_on_top == False:
-        Mc.y += Mc.y_speed
-    elif Mc.Is_jumping == True:
-        Mc.y += Mc.y_speed
-    else :
-        Mc.y_speed = 0
-    '''
-#mon encien code qui est du caca
-    
-
 def draw():
     pyxel.cls(0) #efface l'ecran
     pyxel.rectb(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, 5)#dessinne le personnage
