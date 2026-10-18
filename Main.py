@@ -11,21 +11,23 @@ Mbloc = Class.blocs_managing() #cree une instance
 
 def update(): #fonction update
     if pyxel.btn(pyxel.KEY_LEFT): #rajout de vitesse pour chaque flèche
-        Mc.x_speed = -10
+        Mc.x_speed = -1
     if pyxel.btn(pyxel.KEY_RIGHT):
-        Mc.x_speed = 10
+        Mc.x_speed = 1
     if pyxel.btn(pyxel.KEY_UP):
-        Mc.y_speed = -15
+        Mc.y_speed = -1
     if pyxel.btn(pyxel.KEY_DOWN):
-        Mc.y_speed = +15
+        Mc.y_speed = +1
 
     Mbloc.set_block(12, 70, 15, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
     Mbloc.set_block(50, 85, 15, 10)
 
-    if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, Mbloc.blocs[0].x, Mbloc.blocs[0].y, Mbloc.blocs[0].width, Mbloc.blocs[0].height) == True:
-        print("true")
-    else:
-        print("false")
+    for bloc in Mbloc.blocs:
+            if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                if collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                    print("collsion")
+                else:
+                    print("pas collisionm")
 
     Mc.x += Mc.x_speed #aplique les vitesses verticales
     Mc.y += Mc.y_speed #aplique les vitesses horizontales

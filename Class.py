@@ -63,10 +63,10 @@ class collider:
         cond3 = Obj_1_y + Obj_1_height > Obj_2_y
         cond4 = Obj_1_y < Obj_2_y + Obj_2_height
         if (cond1 and cond2 and cond3 and cond4): # si toute les conditions sont vrai return true pour dire que oui il y a collision
-            print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
+            #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return True
         else : # si une des conditions est fausses return false pour dire que non il n'y a pas collision
-            print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
+            #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return False
     
     def Point_to_rect(self, Obj_1_x, Obj_1_y, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
@@ -76,10 +76,10 @@ class collider:
         cond3 = Obj_1_x < Obj_2_x + Obj_2_width
         cond4 = Obj_1_y < Obj_2_y + Obj_2_height
         if (cond1 and cond2 and cond3 and cond4): # si toute les conditions sont vrai return true pour dire que oui il y a collision
-            print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
+            #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return True
         else : # si une des conditions est fausses return false pour dire que non il n'y a pas collision
-            print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
+            #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return False
 
 class world:
