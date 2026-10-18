@@ -1,8 +1,9 @@
 import pyxel
 import World
 import Class
-
-pyxel.init(128, 128, title="LF") #initie la fenetre
+screen_x = 128 #defini la taille de l'ecran
+screen_y = 128
+pyxel.init(screen_x, screen_y, title="LF") #initie la fenetre
 pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
 
 Mc = Class.character(60, 60, 7, 12) #cree une instance de la classe character (qui sera notre Main character (Mc))
@@ -89,6 +90,8 @@ def update(): #fonction update
 
 def draw():
     pyxel.cls(0) #efface l'ecran
+    if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+        Mc.speak("je suis moi et uniquement moi mais appel moi par mon nom", "fr")
     pyxel.rectb(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, 5)#dessinne le personnage
     #pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
     Mbloc.draw_all_blocs() #dessinne tout les blocs dans la liste de blocs (blocs[])

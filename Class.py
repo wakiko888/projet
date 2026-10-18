@@ -15,6 +15,33 @@ class character: #classe pour tout les personnages
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
 
+    def speak(self, text, language):
+        Pixel_per_line = 50
+        pixels_on_line = 0
+        Words = text.split(" ")
+        Words_on_line = []
+        line = 0
+        lines = []
+        for word in Words:
+            word_width = len(word)*4
+            if word_width + pixels_on_line <= Pixel_per_line:
+                Words_on_line.append(word)
+                pixels_on_line += word_width + 4
+
+            else:
+                lines.append(" ".join(Words_on_line))
+                line += 1
+                Words_on_line = [word]
+                pixels_on_line = word_width + 4
+
+        if Words_on_line:
+            lines.append(" ".join(Words_on_line))
+
+        start_y = self.y - len(lines) * 7
+
+        for i, line_text in enumerate(lines):
+            pyxel.text(self.x, start_y + i * 7, line_text, 8)
+
 class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca crée un bloc)
     def __init__(self, x, y, width, height):
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
@@ -88,5 +115,4 @@ class world:
         self.Gravity = Gravity
         self.Ground_Friction = Ground_Friction
         self.Air_friction = Air_friction
-        self.Fall_MaxSpeed = Fall_MaxSpeed
-    
+        self.Fall_MaxSpeed = Fall_MaxSpeed    
