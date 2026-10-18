@@ -23,8 +23,7 @@ def update(): #fonction update
     if pyxel.btn(pyxel.KEY_DOWN):
         Mc.y_speed = +1
 
-    Mc.x += Mc.x_speed #aplique les vitesses verticales
-    Mc.y += Mc.y_speed #aplique les vitesses horizontales
+    Mc.y += Mc.y_speed #aplique les vitesses verticales
 
     Mc.Is_colliding = False
     Mc.who_collide = "none"
@@ -39,6 +38,29 @@ def update(): #fonction update
     if Mc.Is_colliding == True and Mc.y_speed > 0:
         Mc.y = Mc.who_collide.y - Mc.HitBox_height
         Mc.y_speed = 0
+
+    if Mc.Is_colliding == True and Mc.y_speed < 0:
+        Mc.y = Mc.who_collide.y + Mc.who_collide.height
+        Mc.y_speed = 0
+
+    Mc.x += Mc.x_speed #aplique les vitesses horizontales
+
+    Mc.Is_colliding = False
+    Mc.who_collide = "none"
+
+    for bloc in Mbloc.blocs:
+            if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                if collider.Rect_to_rect(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                    Mc.Is_colliding = True
+                    Mc.who_collide = bloc
+                    break
+    if Mc.Is_colliding == True and Mc.x_speed > 0:
+        Mc.x = Mc.who_collide.x - Mc.HitBox_width
+        Mc.x_speed = 0
+
+    if Mc.Is_colliding == True and Mc.x_speed < 0:
+        Mc.x = Mc.who_collide.x + Mc.who_collide.width
+        Mc.x_speed = 0
 
     #temporaire
     Mc.x_speed = 0
@@ -100,6 +122,6 @@ def draw():
     pyxel.rectb(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, 5)#dessinne le personnage
     #pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
     Mbloc.draw_all_blocs() #dessinne tout les blocs dans la liste de blocs (blocs[])
-    pyxel.circb(Mc.x + 7, Mc.y + 9, 50, 5) #dessinne le rayon dans lequels les collsions seront chargées
+    pyxel.circb(Mc.x + 3.5, Mc.y + 6, 50, 5) #dessinne le rayon dans lequels les collsions seront chargées
 
 pyxel.run(update, draw)
