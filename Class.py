@@ -44,7 +44,7 @@ class blocs_managing:
 
 
 class collider:
-    def Is_close_to_collide(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
+    def Is_close_to_collide(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height): #Fonction qui determine si 2 objets sont assez proche pour calculer la collision (sert a réduire le cout en performance en ne calculant que les collisions proche)
         if (abs(Obj_2_x + Obj_2_width/2 - (Obj_1_x + Obj_1_width/2)) < 50) and (abs(Obj_2_y + Obj_2_height/2 - (Obj_1_y + Obj_1_height/2)) < 50): # "abs(Obj_2_x - Obj_1_x)" retourne la valeur absolue de la difference de position entre les 2 x des 2 objets, (donc leur distance l'un  a l'autre, et si elle a moins de 50 ca "vaut le cout" de tester une collsion)
             return True
         else:
