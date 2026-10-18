@@ -43,6 +43,11 @@ class blocs_managing:
 
 
 class collider:
+    def Is_close_to_collide(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
+        if (abs(Obj_2_x + Obj_2_width/2 - (Obj_1_x + Obj_1_width/2)) < 50) and (abs(Obj_2_y + Obj_2_height/2 - (Obj_1_y + Obj_1_height/2)) < 50): # "abs(Obj_2_x - Obj_1_x)" retourne la valeur absolue de la difference de position entre les 2 x des 2 objets, (donc leur distance l'un  a l'autre, et si elle a moins de 50 ca "vaut le cout" de tester une collsion)
+            return True
+        else:
+            return False
 
     def Rect_up_line(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_length):
         #va verfier si un rectangle (objet 1) est dans ou dessus une ligne horizontal (objet 2) (pas sur que ca va rester longtemps ca)
@@ -76,4 +81,11 @@ class collider:
         else : # si une des conditions est fausses return false pour dire que non il n'y a pas collision
             print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return False
+
+class world:
+    def __init__(Gravity, Ground_Friction, Air_friction, Fall_MaxSpeed):
+        self.Gravity = Gravity
+        self.Ground_Friction = Ground_Friction
+        self.Air_friction = Air_friction
+        self.Fall_MaxSpeed = Fall_MaxSpeed
     
