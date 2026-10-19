@@ -1,6 +1,6 @@
 import pyxel
 class character: #classe pour tout les personnages
-    def __init__(self, x, y, HitBox_width, HitBox_height): 
+    def __init__(self, x, y, HitBox_width, HitBox_height, camera): 
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
         self.x = x
         self.y = y
@@ -14,6 +14,7 @@ class character: #classe pour tout les personnages
         self.who_collide = "none"
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
+        self.camera = camera
 
     def speak(self, text, language): #fonction pour afficher un texte au dessus de un personnage
         Pixel_per_line = 50
@@ -41,28 +42,30 @@ class character: #classe pour tout les personnages
         start_y = self.y - len(lines) * 7
 
         for i, line_text in enumerate(lines): #affiche chaque ligne de mots
-            pyxel.text(self.x, start_y + i * 7, line_text, 8)
+            pyxel.text(self.x * self.camera.zoom, (start_y + i * 7) * self.camera.zoom, line_text, 8)
 
 class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca crée un bloc)
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, camera):
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.camera = camera
 
     def draw(self):
         #dessine l'instance de bloc actuelle
-        pyxel.rect(self.x, self.y, self.width, self.height, 5)
+        pyxel.rect(self.x * self.camera.zoom, self.y * self.camera.zoom, self.width * self.camera.zoom, self.height * self.camera.zoom, 5)
 
 class blocs_managing:
-    def __init__(self):
+    def __init__(self, camera):
         #crée la liste de blocs a dessiner
         self.blocs = []
+        self.camera = camera
 
     def set_block(self, x, y, width, height):
         #crée une instance de bloc (un bloc) et le rajoute a la liste des blocs a dessinner
-        nouveau_bloc = bloc(x, y, width, height)
+        nouveau_bloc = bloc(x, y, width, height, self.camera)
         self.blocs.append(nouveau_bloc)
 
     def draw_all_blocs(self):
@@ -117,3 +120,11 @@ class world:
         self.Ground_Friction = Ground_Friction
         self.Air_friction = Air_friction
         self.Fall_MaxSpeed = Fall_MaxSpeed
+
+class camera:
+    def __init__(self, x = 0, y = 0, size_x = 256, size_y = 256, zoom = 1):
+        self.x = x
+        self.y = y
+        self. size_x = size_x
+        self.size_y = size_y
+        self.zoom = zoom
