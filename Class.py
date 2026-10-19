@@ -125,6 +125,47 @@ class camera:
     def __init__(self, x = 0, y = 0, size_x = 256, size_y = 256, zoom = 1): #la classe de la camera
         self.x = x
         self.y = y
-        self. size_x = size_x
+        self.size_x = size_x
         self.size_y = size_y
         self.zoom = zoom
+
+    def move_left(self) -> None:
+        self.x -= 5
+
+    def move_right(self) -> None:
+        self.x += 5
+
+    def move_down(self) -> None:
+        self.x += 5
+
+    def move_up(self) -> None:
+        self.y -= 5
+
+# Création 
+class Mouse:
+    def __init__(self) -> None:
+        self.x = 0
+        self.y = 0
+        self.update_x = 0
+        self.update_y = 0
+
+    def actual_position(self) -> None:
+        self.x = pyxel.mouse_x
+        self.y = pyxel.mouse_y
+
+    def update_position(self) -> None:
+        self.update_x = pyxel.mouse_x
+        self.update_y = pyxel.mouse_y
+
+    def move_left_while_press(self) -> bool:
+        return self.x > self.update_x
+
+    def move_right_while_press(self) -> bool:
+        return self.x < self.update_x
+
+    def move_down_while_press(self) -> bool:
+        return self.y > self.update_y
+
+    def move_up_while_press(self) -> bool:
+        return self.y < self.update_y
+    

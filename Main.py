@@ -11,33 +11,37 @@ Cam = Class.camera(0, 0, 256, 256, 2)
 Mc = Class.character(60, 60, 7, 12, Cam) #cree une instance de la classe character (qui sera notre Main character (Mc))
 Mbloc = Class.blocs_managing(Cam) #cree une instance du manager de bloc pour gerer les blocs
 World = Class.world(2.0, 3.0, 3, 7.0) #cree une instance du monde pour importer toute les règles et fonctions
+mouse = Class.Mouse() # Création de la souris dans la class
 
 Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
 Mbloc.set_block(50, 85, 15, 10)
 
 
 def update(): #fonction update
-    if pyxel.btn(pyxel.KEY_LEFT): #rajout de vitesse pour chaque flèche
+
+    # Déplacement avec zqsd ou les flèches
+    if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q): #rajout de vitesse pour chaque flèche
         Mc.x_speed = -10
-    if pyxel.btn(pyxel.KEY_RIGHT):
+    if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_D):
         Mc.x_speed = 10
-    if pyxel.btnp(pyxel.KEY_UP):
+    if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_Z):
         Mc.y_speed = -15
-    if pyxel.btn(pyxel.KEY_DOWN):
+    if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
         Mc.y_speed = +15
 
-    if pyxel.btn(pyxel.KEY_Q): #controle de taille et de position de la camera
-        Cam.zoom += 0.1
-    if pyxel.btn(pyxel.KEY_E):
-        Cam.zoom += -0.1
-    if pyxel.btn(pyxel.KEY_A):
-        Cam.x += -5
-    if pyxel.btn(pyxel.KEY_D):
-        Cam.x += 5
-    if pyxel.btn(pyxel.KEY_W):
-        Cam.y += -5
-    if pyxel.btn(pyxel.KEY_S):
-        Cam.y += 5
+    if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT):
+        # Mise à jour des coordonnées de la souris
+        mouse.actual_position()
+        while pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT,1 ,1):
+            mouse.update_position
+            if mouse.move_left_while_press():
+                Cam.move_left
+            if mouse.move_right_while_press():
+                Cam.move_right
+            if mouse.move_down_while_press():
+                Cam.move_down
+            if mouse.move_up_while_press():
+                Cam.move_up
 
     if Mc.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
         friction = World.Ground_Friction
@@ -71,11 +75,11 @@ def update(): #fonction update
                     Mc.Is_on_top = True
                     break
 
-    if Mc.Is_colliding == True and Mc.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
+    if Mc.Is_colliding and Mc.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
         Mc.y = Mc.who_collide.y - Mc.HitBox_height
         Mc.y_speed = 0
 
-    if Mc.Is_colliding == True and Mc.y_speed < 0: #si il y a collision et que le perso monte vers le haut, le replacer sous le bloc et reinitialiser sa vitesse
+    if Mc.Is_colliding and Mc.y_speed < 0: #si il y a collision et que le perso monte vers le haut, le replacer sous le bloc et reinitialiser sa vitesse
         Mc.y = Mc.who_collide.y + Mc.who_collide.height
         Mc.y_speed = 0
 
@@ -94,16 +98,17 @@ def update(): #fonction update
                     Mc.Is_on_top = True
                     break
 
-    if Mc.Is_colliding == True and Mc.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
+    if Mc.Is_colliding and Mc.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
         Mc.x = Mc.who_collide.x - Mc.HitBox_width
         Mc.x_speed = 0
 
-    if Mc.Is_colliding == True and Mc.x_speed < 0: #si il y a collision et que le perso va vers le coté gauche, le replacer sur le coté du bloc et reinitialiser sa vitesse
+    if Mc.Is_colliding and Mc.x_speed < 0: #si il y a collision et que le perso va vers le coté gauche, le replacer sur le coté du bloc et reinitialiser sa vitesse
         Mc.x = Mc.who_collide.x + Mc.who_collide.width
         Mc.x_speed = 0
 
 def draw():
     pyxel.cls(0) #efface l'ecran
+    pyxel.mouse(True)
     pyxel.camera(Cam.x, Cam.y)
     if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT): #fais dire au mc le texte quand on clic gauche
         Mc.speak("je suis moi et uniquement moi mais appel moi par mon nom", "fr")

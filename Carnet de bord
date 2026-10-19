@@ -24,3 +24,7 @@ Cf googledrive pour un screen
 /!\ on obtient un bug de collison ou on glich dans la plaforme
 
 => Piste de solution du prof : Utiliser le pget(x,y) 
+
+Thaï :
+    Changment de déplacement du Main Character avec les flèches ou les touches zqsd
+    Changement de déplacement et du zoom de la caméra avec la molette et le clique droit de la souris
