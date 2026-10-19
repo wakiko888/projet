@@ -26,7 +26,7 @@ def update(): #fonction update
     if pyxel.btn(pyxel.KEY_DOWN):
         Mc.y_speed = +15
 
-    if pyxel.btn(pyxel.KEY_Q):
+    if pyxel.btn(pyxel.KEY_Q): #controle de taille et de position de la camera
         Cam.zoom += 0.1
     if pyxel.btn(pyxel.KEY_E):
         Cam.zoom += -0.1

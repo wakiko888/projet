@@ -122,7 +122,7 @@ class world:
         self.Fall_MaxSpeed = Fall_MaxSpeed
 
 class camera:
-    def __init__(self, x = 0, y = 0, size_x = 256, size_y = 256, zoom = 1):
+    def __init__(self, x = 0, y = 0, size_x = 256, size_y = 256, zoom = 1): #la classe de la camera
         self.x = x
         self.y = y
         self. size_x = size_x
