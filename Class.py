@@ -16,7 +16,7 @@ class character: #classe pour tout les personnages
         self.Load_collision_box_height = 60
         self.camera = camera
 
-    def speak(self, text, language): #fonction pour afficher un texte au dessus de un personnage
+    def speak(self, text : str, language): #fonction pour afficher un texte au dessus de un personnage
         Pixel_per_line = 50
         pixels_on_line = 0
         Words = text.split(" ") #separe chaque mots du texte dans une liste
