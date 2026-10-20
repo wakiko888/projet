@@ -10,7 +10,7 @@ collider = Class.collider() #cree une instance de la classe collider pour utilis
 Cam = Class.camera(0, 0, 256, 256, 2)
 Mc = Class.character(60, 60, 7, 12, Cam) #cree une instance de la classe character (qui sera notre Main character (Mc))
 Mbloc = Class.blocs_managing(Cam) #cree une instance du manager de bloc pour gerer les blocs
-World = Class.world(2.0, 3.0, 3, 7.0) #cree une instance du monde pour importer toute les règles et fonctions
+World = Class.world(2, 3, 3, 7) #cree une instance du monde pour importer toute les règles et fonctions
 
 Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
 Mbloc.set_block(50, 85, 15, 10)

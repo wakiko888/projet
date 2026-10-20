@@ -1,6 +1,6 @@
 #regles du monde
 
-Gravity = 2.0
-Ground_Friction = 3.0
+Gravity = 2
+Ground_Friction = 3
 Air_friction = 3
-Fall_MaxSpeed = 7.0
+Fall_MaxSpeed = 7
