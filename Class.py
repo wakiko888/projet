@@ -91,10 +91,10 @@ class collider:
     
     def Rect_to_rect(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
         #verifie par 4 conditions si 2 rectangle sont superposés
-        cond1 = Obj_1_x + Obj_1_width > Obj_2_x
-        cond2 = Obj_1_x < Obj_2_x + Obj_2_width
-        cond3 = Obj_1_y + Obj_1_height > Obj_2_y
-        cond4 = Obj_1_y < Obj_2_y + Obj_2_height
+        cond1 = Obj_1_x + Obj_1_width >= Obj_2_x
+        cond2 = Obj_1_x <= Obj_2_x + Obj_2_width
+        cond3 = Obj_1_y + Obj_1_height >= Obj_2_y
+        cond4 = Obj_1_y <= Obj_2_y + Obj_2_height
         if (cond1 and cond2 and cond3 and cond4): # si toute les conditions sont vrai return true pour dire que oui il y a collision
             #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return True
