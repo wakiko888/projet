@@ -1,6 +1,6 @@
 import pyxel
 class character: #classe pour tout les personnages
-    def __init__(self, x, y, HitBox_width, HitBox_height, camera): 
+    def __init__(self, x, y, HitBox_width, HitBox_height,color, camera): 
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
         self.x = x
         self.y = y
@@ -15,6 +15,7 @@ class character: #classe pour tout les personnages
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
         self.camera = camera
+        self.color = color
 
     def speak(self, text : str, language): #fonction pour afficher un texte au dessus de un personnage
         Pixel_per_line = 50
@@ -44,7 +45,7 @@ class character: #classe pour tout les personnages
         for i, line_text in enumerate(lines): #affiche chaque ligne de mots
             pyxel.text(self.x * self.camera.zoom, (start_y + i * 7) * self.camera.zoom, line_text, 8)
 
-    def collide(self, World, blocs, collider):
+    def collide(self, World, blocs, collider): #fonction pour calculer si il y a des collisions et réagir en conséquence
         if self.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
             friction = World.Ground_Friction
         else:
