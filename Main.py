@@ -10,7 +10,8 @@ collider = Class.collider() #cree une instance de la classe collider pour utilis
 Cam = Class.camera(0, 0, 256, 256, 2)
 Mc = Class.character(60, 60, 7, 12, Cam) #cree une instance de la classe character (qui sera notre Main character (Mc))
 Mbloc = Class.blocs_managing(Cam) #cree une instance du manager de bloc pour gerer les blocs
-World = Class.world(2, 3, 3, 7) #cree une instance du monde pour importer toute les règles et fonctions
+world = Class.world(2, 3, 3, 7) #cree une instance du monde pour importer toute les règles et fonctions
+rule = World.rules()
 
 Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
 Mbloc.set_block(50, 85, 15, 10)
@@ -40,12 +41,12 @@ def update(): #fonction update
         Cam.y += 5
 
     if Mc.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
-        friction = World.Ground_Friction
+        friction = rule.Ground_Friction
     else:
-        friction = World.Air_friction
+        friction = rule.Air_friction
 
-    if Mc.y_speed < World.Fall_MaxSpeed: #apliquer la gravité que si le personnage ne tombe pas plus vite que la limite max
-        Mc.y_speed += World.Gravity
+    if Mc.y_speed < rule.Fall_MaxSpeed: #apliquer la gravité que si le personnage ne tombe pas plus vite que la limite max
+        Mc.y_speed += rule.Gravity
 
     if Mc.x_speed > friction: #apliquer la friction pour reduire la vitesse horizontale quimporte le sens
         Mc.x_speed -= friction
@@ -68,7 +69,7 @@ def update(): #fonction update
                     #met les variables qui indique que il y a collision et avec qui est la collision
                     Mc.Is_colliding = True
                     Mc.who_collide = bloc
-                    Mc.Is_on_top = True
+                    Mc.Is_on_top = Mc.y_speed > 0
                     break
 
     if Mc.Is_colliding == True and Mc.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
@@ -83,7 +84,6 @@ def update(): #fonction update
 
     Mc.Is_colliding = False #reinitialisation de toutes les variables de collision
     Mc.who_collide = "none"
-    Mc.Is_on_top = False
 
     for bloc in Mbloc.blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
             if collider.Is_close_to_collide(Mc.x, Mc.y, Mc.HitBox_width, Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
@@ -91,7 +91,6 @@ def update(): #fonction update
                     #met les variables qui indique que il y a collision et avec qui est la collision
                     Mc.Is_colliding = True
                     Mc.who_collide = bloc
-                    Mc.Is_on_top = True
                     break
 
     if Mc.Is_colliding == True and Mc.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
