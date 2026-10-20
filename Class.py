@@ -60,13 +60,12 @@ class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca
 class blocs_managing:
     def __init__(self, camera):
         #crée la liste de blocs a dessiner
-        self.blocs = []
+        self.blocs : list[bloc]= []
         self.camera = camera
 
     def set_block(self, x, y, width, height):
         #crée une instance de bloc (un bloc) et le rajoute a la liste des blocs a dessinner
-        nouveau_bloc = bloc(x, y, width, height, self.camera)
-        self.blocs.append(nouveau_bloc)
+        self.blocs.append(bloc(x, y, width, height, self.camera))
 
     def draw_all_blocs(self):
         #boucle qui appelle la fonction "draw" sur chaque instance de bloc dans la liste
