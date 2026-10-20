@@ -44,6 +44,70 @@ class character: #classe pour tout les personnages
         for i, line_text in enumerate(lines): #affiche chaque ligne de mots
             pyxel.text(self.x * self.camera.zoom, (start_y + i * 7) * self.camera.zoom, line_text, 8)
 
+    def collide(self, World, blocs, collider):
+        if self.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
+            friction = World.Ground_Friction
+        else:
+            friction = World.Air_friction
+
+        if self.y_speed < World.Fall_MaxSpeed: #apliquer la gravité que si le personnage ne tombe pas plus vite que la limite max
+            self.y_speed += World.Gravity
+
+        if self.x_speed > friction: #apliquer la friction pour reduire la vitesse horizontale quimporte le sens
+            self.x_speed -= friction
+
+        elif self.x_speed < -friction:
+            self.x_speed += friction
+        
+        else: #si la vitesse est entre friction et -friction, elle est "arrondie" a zero
+            self.x_speed = 0
+
+        self.y += self.y_speed #aplique les vitesses verticales
+
+        self.Is_colliding = False #reinitialisation de toutes les variables de collision
+        self.who_collide = "none"
+        self.Is_on_top = False
+
+        for bloc in blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
+                if collider.Is_close_to_collide(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                    if collider.Rect_to_rect(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                        #met les variables qui indique que il y a collision et avec qui est la collision
+                        self.Is_colliding = True
+                        self.who_collide = bloc
+                        self.Is_on_top = True
+                        break
+
+        if self.Is_colliding == True and self.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
+            self.y = self.who_collide.y - self.HitBox_height
+            self.y_speed = 0
+
+        if self.Is_colliding == True and self.y_speed < 0: #si il y a collision et que le perso monte vers le haut, le replacer sous le bloc et reinitialiser sa vitesse
+            self.y = self.who_collide.y + self.who_collide.height
+            self.y_speed = 0
+
+        self.x += self.x_speed #aplique les vitesses horizontales
+
+        self.Is_colliding = False #reinitialisation de toutes les variables de collision
+        self.who_collide = "none"
+        self.Is_on_top = False
+
+        for bloc in blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
+                if collider.Is_close_to_collide(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                    if collider.Rect_to_rect(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
+                        #met les variables qui indique que il y a collision et avec qui est la collision
+                        self.Is_colliding = True
+                        self.who_collide = bloc
+                        self.Is_on_top = True
+                        break
+
+        if self.Is_colliding == True and self.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
+            self.x = self.who_collide.x - self.HitBox_width
+            self.x_speed = 0
+
+        if self.Is_colliding == True and self.x_speed < 0: #si il y a collision et que le perso va vers le coté gauche, le replacer sur le coté du bloc et reinitialiser sa vitesse
+            self.x = self.who_collide.x + self.who_collide.width
+            self.x_speed = 0
+
 class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca crée un bloc)
     def __init__(self, x, y, width, height, camera):
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
