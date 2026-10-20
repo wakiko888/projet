@@ -80,13 +80,15 @@ class collider:
             return True
         else:
             return False
-
+    """
+    Fonction pas utilisée
     def Rect_up_line(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_length):
         #va verfier si un rectangle (objet 1) est dans ou dessus une ligne horizontal (objet 2) (pas sur que ca va rester longtemps ca)
         if (Obj_1_y + Obj_1_height > Obj_2_y - 16) and ((Obj_1_x > Obj_2_x and Obj_1_x < Obj_2_x + Obj_2_length) or (Obj_1_x + Obj_1_width > Obj_2_x and Obj_1_x + Obj_1_width < Obj_2_x + Obj_2_length)):
             return True
         else:
             return False
+    """
     
     def Rect_to_rect(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
         #verifie par 4 conditions si 2 rectangle sont superposés
