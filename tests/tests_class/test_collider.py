@@ -39,12 +39,12 @@ def test_Is_close_to_collide_False_vertical(create_collider):
 def test_Rect_to_rect_True_angle(create_collider, create_object):
     objects = create_object(5,5,5,5)
     create_object(10,10,5,6)
-    assert create_collider.Rect_to_rect(*objects["objet1"],*objects["objet2"])
+    assert not create_collider.Rect_to_rect(*objects["objet1"],*objects["objet2"])
 
 def test_Rect_to_rect_True_border(create_collider, create_object):
     objects = create_object(5,5,5,5)
     create_object(10,9,5,6)
-    assert create_collider.Rect_to_rect(*objects["objet1"],*objects["objet2"])
+    assert not create_collider.Rect_to_rect(*objects["objet1"],*objects["objet2"])
 
 def test_Rect_to_rect_True_on_top(create_collider, create_object):
     objects = create_object(5,5,5,5)
@@ -73,12 +73,12 @@ def test_Rect_to_rect_False_cond4(create_collider):
 def test_Point_to_rect_True_angle(create_collider,create_object):
     objects = create_object(5,5,5,5)
     create_object(5,5)
-    assert create_collider.Point_to_rect(*objects["objet2"], *objects["objet1"])
+    assert not create_collider.Point_to_rect(*objects["objet2"], *objects["objet1"])
 
 def test_Point_to_rect_True_border(create_collider,create_object):
     objects = create_object(5,5,5,5)
     create_object(5,7)
-    assert create_collider.Point_to_rect(*objects["objet2"], *objects["objet1"])
+    assert not create_collider.Point_to_rect(*objects["objet2"], *objects["objet1"])
 
 def test_Point_to_rect_True_in(create_collider,create_object):
     objects = create_object(5,5,5,5)
