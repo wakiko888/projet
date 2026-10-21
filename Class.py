@@ -128,3 +128,18 @@ class camera:
         self.size_x = size_x
         self.size_y = size_y
         self.zoom = zoom
+
+class Mouse:
+    def __init__(self) -> None:
+        self.x = 0
+        self.y = 0
+        self.update_x = 0
+        self.update_y = 0
+
+    def actual_position(self) -> None:
+        self.x = pyxel.mouse_x
+        self.y = pyxel.mouse_y
+
+    def update_position(self) -> None:
+        self.update_x = pyxel.mouse_x
+        self.update_y = pyxel.mouse_y
