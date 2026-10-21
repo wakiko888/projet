@@ -15,6 +15,7 @@ class App:
         self.rule = World.rules()
         self.Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
         self.Mbloc.set_block(50, 85, 15, 10)
+        self.mouse = Class.Mouse()
 
         pyxel.init(self.screen_x, self.screen_y, title="LF") #initie la fenetre
         pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
@@ -22,27 +23,28 @@ class App:
 
 
     def update(self): #fonction update
-        if pyxel.btn(pyxel.KEY_LEFT): #rajout de vitesse pour chaque flèche
+        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q): #rajout de vitesse pour chaque flèche
             self.Mc.x_speed = -10
-        if pyxel.btn(pyxel.KEY_RIGHT):
+        if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_D):
             self.Mc.x_speed = 10
-        if pyxel.btnp(pyxel.KEY_UP):
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_Z):
             self.Mc.y_speed = -15
-        if pyxel.btn(pyxel.KEY_DOWN):
+        if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
             self.Mc.y_speed = +15
 
-        if pyxel.btn(pyxel.KEY_Q): #controle de taille et de position de la camera
-            self.Cam.zoom += 0.1
-        if pyxel.btn(pyxel.KEY_E):
-            self.Cam.zoom += -0.1
-        if pyxel.btn(pyxel.KEY_A):
-            self.Cam.x += -5
-        if pyxel.btn(pyxel.KEY_D):
-            self.Cam.x += 5
-        if pyxel.btn(pyxel.KEY_W):
-            self.Cam.y += -5
-        if pyxel.btn(pyxel.KEY_S):
-            self.Cam.y += 5
+        wheel_delta = pyxel.mouse_wheel
+        if wheel_delta:
+            old_zoom = self.Cam.zoom
+            self.Cam.zoom = max(0.5, min(5, self.Cam.zoom * (1.1 ** wheel_delta)))
+            zoom_ratio = self.Cam.zoom / old_zoom
+            self.Cam.x = (self.Cam.x + pyxel.mouse_x) * zoom_ratio - pyxel.mouse_x
+            self.Cam.y = (self.Cam.y + pyxel.mouse_y) * zoom_ratio - pyxel.mouse_y
+
+        self.mouse.update_position()
+        if pyxel.btn(pyxel.MOUSE_BUTTON_RIGHT):
+            self.Cam.x += self.mouse.x - self.mouse.update_x
+            self.Cam.y += self.mouse.y - self.mouse.update_y
+        self.mouse.actual_position()
 
         if self.Mc.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
             friction = self.rule.Ground_Friction
@@ -107,6 +109,7 @@ class App:
 
     def draw(self):
         pyxel.cls(0) #efface l'ecran
+        pyxel.mouse(True)
         pyxel.camera(self.Cam.x, self.Cam.y)
         if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT): #fais dire au mc le texte quand on clic gauche
             self.Mc.speak("je suis moi et uniquement moi mais appel moi par mon nom", "fr")
