@@ -1,4 +1,5 @@
 import pyxel
+
 class character: #classe pour tout les personnages
     def __init__(self, x, y, HitBox_width, HitBox_height, camera): 
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
@@ -129,19 +130,7 @@ class camera:
         self.size_y = size_y
         self.zoom = zoom
 
-    def move_left(self) -> None:
-        self.x -= 5
-
-    def move_right(self) -> None:
-        self.x += 5
-
-    def move_down(self) -> None:
-        self.x += 5
-
-    def move_up(self) -> None:
-        self.y -= 5
-
-# Création 
+# Création de la souris
 class Mouse:
     def __init__(self) -> None:
         self.x = 0
@@ -156,16 +145,3 @@ class Mouse:
     def update_position(self) -> None:
         self.update_x = pyxel.mouse_x
         self.update_y = pyxel.mouse_y
-
-    def move_left_while_press(self) -> bool:
-        return self.x > self.update_x
-
-    def move_right_while_press(self) -> bool:
-        return self.x < self.update_x
-
-    def move_down_while_press(self) -> bool:
-        return self.y > self.update_y
-
-    def move_up_while_press(self) -> bool:
-        return self.y < self.update_y
-    

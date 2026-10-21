@@ -1,6 +1,8 @@
 import pyxel
 import World
 import Class
+import time
+
 screen_x = 256 #defini la taille de l'ecran
 screen_y = 256
 pyxel.init(screen_x, screen_y, title="LF") #initie la fenetre
@@ -29,19 +31,19 @@ def update(): #fonction update
     if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
         Mc.y_speed = +15
 
-    if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT):
-        # Mise à jour des coordonnées de la souris
-        mouse.actual_position()
-        while pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT,1 ,1):
-            mouse.update_position
-            if mouse.move_left_while_press():
-                Cam.move_left
-            if mouse.move_right_while_press():
-                Cam.move_right
-            if mouse.move_down_while_press():
-                Cam.move_down
-            if mouse.move_up_while_press():
-                Cam.move_up
+    wheel_delta = pyxel.mouse_wheel
+    if wheel_delta:
+        old_zoom = Cam.zoom
+        Cam.zoom = max(0.5, min(5, Cam.zoom * (1.1 ** wheel_delta)))
+        zoom_ratio = Cam.zoom / old_zoom
+        Cam.x = (Cam.x + pyxel.mouse_x) * zoom_ratio - pyxel.mouse_x
+        Cam.y = (Cam.y + pyxel.mouse_y) * zoom_ratio - pyxel.mouse_y
+
+    mouse.update_position()
+    if pyxel.btn(pyxel.MOUSE_BUTTON_RIGHT):
+        Cam.x += mouse.x - mouse.update_x
+        Cam.y += mouse.y - mouse.update_y
+    mouse.actual_position()
 
     if Mc.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
         friction = World.Ground_Friction
