@@ -1,6 +1,6 @@
 import pyxel
 class character: #classe pour tout les personnages
-    def __init__(self, x, y, HitBox_width, HitBox_height,color, camera): 
+    def __init__(self, x, y, HitBox_width, HitBox_height, camera):
         #aplique tout les paramètre a des variables dans la classe et pas dans la fonction
         self.x = x
         self.y = y
@@ -15,7 +15,7 @@ class character: #classe pour tout les personnages
         self.Load_collision_box_width = 45
         self.Load_collision_box_height = 60
         self.camera = camera
-        self.color = color
+
 
     def speak(self, text : str, language): #fonction pour afficher un texte au dessus de un personnage
         Pixel_per_line = 50
@@ -25,11 +25,13 @@ class character: #classe pour tout les personnages
         line = 0
         lines = []
 
+
         for word in Words: #ajoute chaque mots a une liste selon sa ligne
             word_width = len(word)*4
             if word_width + pixels_on_line <= Pixel_per_line:
                 Words_on_line.append(word)
                 pixels_on_line += word_width + 4
+
 
             else:
                 lines.append(" ".join(Words_on_line))
@@ -37,77 +39,16 @@ class character: #classe pour tout les personnages
                 Words_on_line = [word]
                 pixels_on_line = word_width + 4
 
-        if Words_on_line:
-            lines.append(" ".join(Words_on_line))
+
+        lines.append(" ".join(Words_on_line))
+
 
         start_y = self.y - len(lines) * 7
+
 
         for i, line_text in enumerate(lines): #affiche chaque ligne de mots
             pyxel.text(self.x * self.camera.zoom, (start_y + i * 7) * self.camera.zoom, line_text, 8)
 
-    def collide(self, World, blocs, collider): #fonction pour calculer si il y a des collisions et réagir en conséquence
-        if self.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
-            friction = World.Ground_Friction
-        else:
-            friction = World.Air_friction
-
-        if self.y_speed < World.Fall_MaxSpeed: #apliquer la gravité que si le personnage ne tombe pas plus vite que la limite max
-            self.y_speed += World.Gravity
-
-        if self.x_speed > friction: #apliquer la friction pour reduire la vitesse horizontale quimporte le sens
-            self.x_speed -= friction
-
-        elif self.x_speed < -friction:
-            self.x_speed += friction
-        
-        else: #si la vitesse est entre friction et -friction, elle est "arrondie" a zero
-            self.x_speed = 0
-
-        self.y += self.y_speed #aplique les vitesses verticales
-
-        self.Is_colliding = False #reinitialisation de toutes les variables de collision
-        self.who_collide = "none"
-        self.Is_on_top = False
-
-        for bloc in blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
-                if collider.Is_close_to_collide(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                    if collider.Rect_to_rect(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                        #met les variables qui indique que il y a collision et avec qui est la collision
-                        self.Is_colliding = True
-                        self.who_collide = bloc
-                        self.Is_on_top = True
-                        break
-
-        if self.Is_colliding == True and self.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
-            self.y = self.who_collide.y - self.HitBox_height
-            self.y_speed = 0
-
-        if self.Is_colliding == True and self.y_speed < 0: #si il y a collision et que le perso monte vers le haut, le replacer sous le bloc et reinitialiser sa vitesse
-            self.y = self.who_collide.y + self.who_collide.height
-            self.y_speed = 0
-
-        self.x += self.x_speed #aplique les vitesses horizontales
-
-        self.Is_colliding = False #reinitialisation de toutes les variables de collision
-        self.who_collide = "none"
-        self.Is_on_top = False
-
-        for bloc in blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
-                if collider.Is_close_to_collide(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                    if collider.Rect_to_rect(self.x, self.y, self.HitBox_width, self.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                        #met les variables qui indique que il y a collision et avec qui est la collision
-                        self.Is_colliding = True
-                        self.who_collide = bloc
-                        self.Is_on_top = True
-                        break
-
-        if self.Is_colliding == True and self.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
-            self.x = self.who_collide.x - self.HitBox_width
-            self.x_speed = 0
-
-        if self.Is_colliding == True and self.x_speed < 0: #si il y a collision et que le perso va vers le coté gauche, le replacer sur le coté du bloc et reinitialiser sa vitesse
-            self.x = self.who_collide.x + self.who_collide.width
-            self.x_speed = 0
 
 class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca crée un bloc)
     def __init__(self, x, y, width, height, camera):
@@ -118,25 +59,36 @@ class bloc: #classe pour faire chaque instance de bloc (on crée une instance ca
         self.height = height
         self.camera = camera
 
+
     def draw(self):
         #dessine l'instance de bloc actuelle
+        if self.width < 0:
+            self.x = self.x + self.width
+            self.width = abs(self.width)
+        if self.height < 0:
+            self.y = self.y + self.height
+            self.height = abs(self.height)
         pyxel.rect(self.x * self.camera.zoom, self.y * self.camera.zoom, self.width * self.camera.zoom, self.height * self.camera.zoom, 5)
+
 
 class blocs_managing:
     def __init__(self, camera):
         #crée la liste de blocs a dessiner
-        self.blocs = []
+        self.blocs : list[bloc]= []
         self.camera = camera
+
 
     def set_block(self, x, y, width, height):
         #crée une instance de bloc (un bloc) et le rajoute a la liste des blocs a dessinner
-        nouveau_bloc = bloc(x, y, width, height, self.camera)
-        self.blocs.append(nouveau_bloc)
+        self.blocs.append(bloc(x, y, width, height, self.camera))
+
 
     def draw_all_blocs(self):
         #boucle qui appelle la fonction "draw" sur chaque instance de bloc dans la liste
         for bloc_actuel in self.blocs:
             bloc_actuel.draw()
+
+
 
 
 class collider:
@@ -145,14 +97,16 @@ class collider:
             return True
         else:
             return False
-
+    """
+    Fonction pas utilisée
     def Rect_up_line(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_length):
         #va verfier si un rectangle (objet 1) est dans ou dessus une ligne horizontal (objet 2) (pas sur que ca va rester longtemps ca)
         if (Obj_1_y + Obj_1_height > Obj_2_y - 16) and ((Obj_1_x > Obj_2_x and Obj_1_x < Obj_2_x + Obj_2_length) or (Obj_1_x + Obj_1_width > Obj_2_x and Obj_1_x + Obj_1_width < Obj_2_x + Obj_2_length)):
             return True
         else:
             return False
-    
+    """
+   
     def Rect_to_rect(self, Obj_1_x, Obj_1_y, Obj_1_width, Obj_1_height, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
         #verifie par 4 conditions si 2 rectangle sont superposés
         cond1 = Obj_1_x + Obj_1_width > Obj_2_x
@@ -165,7 +119,7 @@ class collider:
         else : # si une des conditions est fausses return false pour dire que non il n'y a pas collision
             #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return False
-    
+   
     def Point_to_rect(self, Obj_1_x, Obj_1_y, Obj_2_x, Obj_2_y, Obj_2_width, Obj_2_height):
         #verifie si un point est dans un rectangle par 4 conditions
         cond1 = Obj_1_x > Obj_2_x
@@ -179,6 +133,7 @@ class collider:
             #print(cond1, cond2, cond3, cond4) #print pour voir quand les collisions bug (optionnel)
             return False
 
+
 class world:
     def __init__(self, Gravity, Ground_Friction, Air_friction, Fall_MaxSpeed):
         self.Gravity = Gravity
@@ -186,10 +141,29 @@ class world:
         self.Air_friction = Air_friction
         self.Fall_MaxSpeed = Fall_MaxSpeed
 
+
 class camera:
     def __init__(self, x = 0, y = 0, size_x = 256, size_y = 256, zoom = 1): #la classe de la camera
         self.x = x
         self.y = y
-        self. size_x = size_x
+        self.size_x = size_x
         self.size_y = size_y
         self.zoom = zoom
+
+
+class Mouse:
+    def __init__(self) -> None:
+        self.x = 0
+        self.y = 0
+        self.update_x = 0
+        self.update_y = 0
+
+
+    def actual_position(self) -> None:
+        self.x = pyxel.mouse_x
+        self.y = pyxel.mouse_y
+
+
+    def update_position(self) -> None:
+        self.update_x = pyxel.mouse_x
+        self.update_y = pyxel.mouse_y
