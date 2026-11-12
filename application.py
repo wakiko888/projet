@@ -16,16 +16,19 @@ class App:
         self.block_manager = game_objects.BlocksManager(self.camera)
         self.world = game_objects.World(2, 3, 3, 7)
         self.rules = world_rules.Rules()
-        self.block_manager.set_block(0, 70, 150, 1)
+        self.block_manager.set_block(50, 70, 50, 1)
         self.block_manager.set_block(50, 85, 15, 10)
         self.block_manager.set_block(100, 25, 50, 20)
         self.mouse = game_objects.Mouse()
+        self.Trigger_manager = game_objects.TriggerManager(self.camera)
+        self.Trigger_manager.set_trigger_zones(100, 50, 50, 25, "Flag1")
 
         pyxel.init(self.screen_x, self.screen_y, title="LF")
         pyxel.load("LF.pyxres")
         pyxel.run(self.update, self.draw)
 
     def update(self): #fonction update
+        print(self.Trigger_manager.triggers["Flag1"])
         #Controle joueur
         if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q):
             self.character.x_speed = -10
@@ -75,6 +78,36 @@ class App:
 
         self.character.y += self.character.y_speed
 
+        for zone in self.Trigger_manager.zones:
+            if self.collider.is_close_to_collide(
+                self.character.x,
+                self.character.y,
+                self.character.hitbox_width,
+                self.character.hitbox_height,
+                zone.x,
+                zone.y,
+                zone.width,
+                zone.height,
+            ):
+
+                if self.collider.rect_to_rect(
+                    self.character.x,
+                    self.character.y,
+                    self.character.hitbox_width,
+                    self.character.hitbox_height,
+                    zone.x,
+                    zone.y,
+                    zone.width,
+                    zone.height,
+                ):
+                    self.Trigger_manager.triggers[zone.flag] = True
+                else:
+                    self.Trigger_manager.triggers[zone.flag] = False
+                    
+            else:
+                self.Trigger_manager.triggers[zone.flag] = False
+
+
         self.character.is_colliding = False
         self.character.who_collide = "none"
         self.character.is_on_top = False
@@ -119,6 +152,36 @@ class App:
             self.character.y_speed = 0
 
         self.character.x += self.character.x_speed
+
+        for zone in self.Trigger_manager.zones:
+            if self.collider.is_close_to_collide(
+                self.character.x,
+                self.character.y,
+                self.character.hitbox_width,
+                self.character.hitbox_height,
+                zone.x,
+                zone.y,
+                zone.width,
+                zone.height,
+            ):
+
+                if self.collider.rect_to_rect(
+                    self.character.x,
+                    self.character.y,
+                    self.character.hitbox_width,
+                    self.character.hitbox_height,
+                    zone.x,
+                    zone.y,
+                    zone.width,
+                    zone.height,
+                ):
+                    self.Trigger_manager.triggers[zone.flag] = True
+                else:
+                    self.Trigger_manager.triggers[zone.flag] = False
+                    
+            else:
+                self.Trigger_manager.triggers[zone.flag] = False
+
 
         self.character.is_colliding = False
         self.character.who_collide = "none"
@@ -183,6 +246,7 @@ class App:
             50 * self.camera.zoom,
             5,
         )
+        self.Trigger_manager.draw_all_zones()
 
 
 if __name__ == "__main__":

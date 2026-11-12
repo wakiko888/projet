@@ -196,9 +196,9 @@ class TriggerManager:
         "Flag3":False
         }
 
-    def set_trigger_zones(self, x, y, width, height):
-        self.zones.append(Block(x, y, width, height, self.camera))
+    def set_trigger_zones(self, x, y, width, height, flag):
+        self.zones.append(TriggerZone(x, y, width, height, self.camera, flag))
 
-    def draw_all_blocks(self):
+    def draw_all_zones(self):
         for zone in self.zones:
             zone.draw()
