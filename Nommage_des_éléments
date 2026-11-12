@@ -1,0 +1,14 @@
+Nommer les éléments selon PEP8
+cf : https://www.delftstack.com/fr/howto/python/python-function-naming/
+
+class :
+    class NameClass:
+
+fonction :
+    def name_function ():
+
+variable :
+    my_variable = 0
+
+constant :
+    MY_CONSTANT = 0

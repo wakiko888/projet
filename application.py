@@ -1,156 +1,184 @@
 import pyxel
-import World
-import Class
+
+import game_objects
+import world_rules
 
 
 class App:
     def __init__(self):
-        self.screen_x = 256 #defini la taille de l'ecran
+        self.screen_x = 256
         self.screen_y = 256
-       
-        self.collider = Class.collider() #cree une instance de la classe collider pour utiliser le collider
-        self.Cam = Class.camera(0, 0, 256, 256, 1)
-        self.Mc = Class.character(60, 60, 7, 12, self.Cam) #cree une instance de la classe character (qui sera notre Main character (Mc))
-        self.Mbloc = Class.blocs_managing(self.Cam) #cree une instance du manager de bloc pour gerer les blocs
-        self.world = Class.world(2, 3, 3, 7) #cree une instance du monde pour importer toute les règles et fonctions
-        self.rule = World.rules()
-        self.Mbloc.set_block(12, 70, 50, 1) #crée en appellant l'instance de manager de bloc un bloc x = 12, y = 70, width = 15, Height = 1 (une ligne de longeur 15)
-        self.Mbloc.set_block(50, 85, 15, 10)
-        self.mouse = Class.Mouse()
-        self.state = 8
 
+        self.collider = game_objects.Collider()
+        self.camera = game_objects.Camera(0, 0, 256, 256, 2)
+        self.character = game_objects.Character(60, 60, 7, 12, self.camera)
+        self.block_manager = game_objects.BlocksManager(self.camera)
+        self.world = game_objects.World(2, 3, 3, 7)
+        self.rules = world_rules.Rules()
+        self.block_manager.set_block(12, 70, 50, 1)
+        self.block_manager.set_block(50, 85, 15, 10)
+        self.mouse = game_objects.Mouse()
 
-        pyxel.init(self.screen_x, self.screen_y, title="LF") #initie la fenetre
-        pyxel.load("LF.pyxres") #Charge le fichiers avec les sprites et les sons
+        pyxel.init(self.screen_x, self.screen_y, title="LF")
+        pyxel.load("LF.pyxres")
         pyxel.run(self.update, self.draw)
 
-
-
-
-    def update(self): #fonction update
-        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q): #rajout de vitesse pour chaque flèche
-            self.Mc.x_speed = -10
+    def update(self):
+        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q):
+            self.character.x_speed = -10
         if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_D):
-            self.Mc.x_speed = 10
+            self.character.x_speed = 10
         if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_Z):
-            self.Mc.y_speed = -15
+            self.character.y_speed = -15
         if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
-            self.Mc.y_speed = +15
-       
+            self.character.y_speed = +15
+
         wheel_delta = pyxel.mouse_wheel
         if wheel_delta:
-            old_zoom = self.Cam.zoom
-            self.Cam.zoom = max(0.5, min(5, self.Cam.zoom * (1.1 ** wheel_delta)))
-            zoom_ratio = self.Cam.zoom / old_zoom
-            self.Cam.x = (self.Cam.x + pyxel.mouse_x) * zoom_ratio - pyxel.mouse_x
-            self.Cam.y = (self.Cam.y + pyxel.mouse_y) * zoom_ratio - pyxel.mouse_y
-
+            old_zoom = self.camera.zoom
+            self.camera.zoom = max(
+                0.5, min(5, self.camera.zoom * (1.1**wheel_delta))
+            )
+            zoom_ratio = self.camera.zoom / old_zoom
+            self.camera.x = (
+                self.camera.x + pyxel.mouse_x
+            ) * zoom_ratio - pyxel.mouse_x
+            self.camera.y = (
+                self.camera.y + pyxel.mouse_y
+            ) * zoom_ratio - pyxel.mouse_y
 
         self.mouse.update_position()
         if pyxel.btn(pyxel.MOUSE_BUTTON_RIGHT):
-            self.Cam.x += self.mouse.x - self.mouse.update_x
-            self.Cam.y += self.mouse.y - self.mouse.update_y
+            self.camera.x += self.mouse.x - self.mouse.update_x
+            self.camera.y += self.mouse.y - self.mouse.update_y
         self.mouse.actual_position()
 
-
-        if pyxel.btnp(pyxel.KEY_P):
-            self.x_builder_0 = self.mouse.x / self.Cam.zoom + self.Cam.x
-            self.y_builder_0 = self.mouse.y / self.Cam.zoom + self.Cam.y
-            self.state = 5
-       
-        if pyxel.btnr(pyxel.KEY_P):
-            self.x_builder_1 = self.mouse.x / self.Cam.zoom + self.Cam.x
-            self.y_builder_1 = self.mouse.y / self.Cam.zoom + self.Cam.y
-            self.Mbloc.set_block(self.x_builder_0, self.y_builder_0, (self.x_builder_1 - self.x_builder_0) * self.Cam.zoom, (self.y_builder_1 - self.y_builder_0) * self.Cam.zoom)
-            self.state = 8
-
-
-        if self.Mc.Is_on_top == True: #si le perso est sur un bloc, mettre la friction a la friction du sol et non de l'air
-            friction = self.rule.Ground_Friction
+        if self.character.is_on_top:
+            friction = self.rules.ground_friction
         else:
-            friction = self.rule.Air_friction
+            friction = self.rules.air_friction
 
+        if self.character.y_speed < self.rules.fall_max_speed:
+            self.character.y_speed += self.rules.gravity
 
-        if self.Mc.y_speed < self.rule.Fall_MaxSpeed: #apliquer la gravité que si le personnage ne tombe pas plus vite que la limite max
-            self.Mc.y_speed += self.rule.Gravity
+        if self.character.x_speed > friction:
+            self.character.x_speed -= friction
+        elif self.character.x_speed < -friction:
+            self.character.x_speed += friction
+        else:
+            self.character.x_speed = 0
 
+        self.character.y += self.character.y_speed
 
-        if self.Mc.x_speed > friction: #apliquer la friction pour reduire la vitesse horizontale quimporte le sens
-            self.Mc.x_speed -= friction
+        self.character.is_colliding = False
+        self.character.who_collide = "none"
+        self.character.is_on_top = False
 
+        for block in self.block_manager.blocks:
+            if self.collider.is_close_to_collide(
+                self.character.x,
+                self.character.y,
+                self.character.hitbox_width,
+                self.character.hitbox_height,
+                block.x,
+                block.y,
+                block.width,
+                block.height,
+            ):
+                if self.collider.rect_to_rect(
+                    self.character.x,
+                    self.character.y,
+                    self.character.hitbox_width,
+                    self.character.hitbox_height,
+                    block.x,
+                    block.y,
+                    block.width,
+                    block.height,
+                ):
+                    self.character.is_colliding = True
+                    self.character.who_collide = block
+                    self.character.is_on_top = self.character.y_speed > 0
+                    break
 
-        elif self.Mc.x_speed < -friction:
-            self.Mc.x_speed += friction
-       
-        else: #si la vitesse est entre friction et -friction, elle est "arrondie" a zero
-            self.Mc.x_speed = 0
+        if self.character.is_colliding and self.character.y_speed > 0:
+            self.character.y = (
+                self.character.who_collide.y - self.character.hitbox_height
+            )
+            self.character.y_speed = 0
 
+        if self.character.is_colliding and self.character.y_speed < 0:
+            self.character.y = (
+                self.character.who_collide.y
+                + self.character.who_collide.height
+            )
+            self.character.y_speed = 0
 
-        self.Mc.y += self.Mc.y_speed #aplique les vitesses verticales
+        self.character.x += self.character.x_speed
 
+        self.character.is_colliding = False
+        self.character.who_collide = "none"
 
-        self.Mc.Is_colliding = False #reinitialisation de toutes les variables de collision
-        self.Mc.who_collide = "none"
-        self.Mc.Is_on_top = False
+        for block in self.block_manager.blocks:
+            if self.collider.is_close_to_collide(
+                self.character.x,
+                self.character.y,
+                self.character.hitbox_width,
+                self.character.hitbox_height,
+                block.x,
+                block.y,
+                block.width,
+                block.height,
+            ):
+                if self.collider.rect_to_rect(
+                    self.character.x,
+                    self.character.y,
+                    self.character.hitbox_width,
+                    self.character.hitbox_height,
+                    block.x,
+                    block.y,
+                    block.width,
+                    block.height,
+                ):
+                    self.character.is_colliding = True
+                    self.character.who_collide = block
+                    break
 
+        if self.character.is_colliding and self.character.x_speed > 0:
+            self.character.x = (
+                self.character.who_collide.x - self.character.hitbox_width
+            )
+            self.character.x_speed = 0
 
-        for bloc in self.Mbloc.blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
-                if self.collider.Is_close_to_collide(self.Mc.x, self.Mc.y, self.Mc.HitBox_width, self.Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                    if self.collider.Rect_to_rect(self.Mc.x, self.Mc.y, self.Mc.HitBox_width, self.Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                        #met les variables qui indique que il y a collision et avec qui est la collision
-                        self.Mc.Is_colliding = True
-                        self.Mc.who_collide = bloc
-                        self.Mc.Is_on_top = self.Mc.y_speed > 0
-                        break
-
-
-        if self.Mc.Is_colliding == True and self.Mc.y_speed > 0: #si il y a collision et que le perso tombe vers le bas, le replacer sur le bloc et reinitialiser sa vitesse
-            self.Mc.y = self.Mc.who_collide.y - self.Mc.HitBox_height
-            self.Mc.y_speed = 0
-
-
-        if self.Mc.Is_colliding == True and self.Mc.y_speed < 0: #si il y a collision et que le perso monte vers le haut, le replacer sous le bloc et reinitialiser sa vitesse
-            self.Mc.y = self.Mc.who_collide.y + self.Mc.who_collide.height
-            self.Mc.y_speed = 0
-
-
-        self.Mc.x += self.Mc.x_speed #aplique les vitesses horizontales
-
-
-        self.Mc.Is_colliding = False #reinitialisation de toutes les variables de collision
-        self.Mc.who_collide = "none"
-
-
-        for bloc in self.Mbloc.blocs: #boucle qui verifie chaque bloc si il est a proximité puis si il est en collision avec le personnage
-                if self.collider.Is_close_to_collide(self.Mc.x, self.Mc.y, self.Mc.HitBox_width, self.Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                    if self.collider.Rect_to_rect(self.Mc.x, self.Mc.y, self.Mc.HitBox_width, self.Mc.HitBox_height, bloc.x, bloc.y, bloc.width, bloc.height):
-                        #met les variables qui indique que il y a collision et avec qui est la collision
-                        self.Mc.Is_colliding = True
-                        self.Mc.who_collide = bloc
-                        break
-
-
-        if self.Mc.Is_colliding == True and self.Mc.x_speed > 0: #si il y a collision et que le perso va vers le coté droit, le replacer sur le coté du bloc et reinitialiser sa vitesse
-            self.Mc.x = self.Mc.who_collide.x - self.Mc.HitBox_width
-            self.Mc.x_speed = 0
-
-
-        if self.Mc.Is_colliding == True and self.Mc.x_speed < 0: #si il y a collision et que le perso va vers le coté gauche, le replacer sur le coté du bloc et reinitialiser sa vitesse
-            self.Mc.x = self.Mc.who_collide.x + self.Mc.who_collide.width
-            self.Mc.x_speed = 0
-
+        if self.character.is_colliding and self.character.x_speed < 0:
+            self.character.x = (
+                self.character.who_collide.x + self.character.who_collide.width
+            )
+            self.character.x_speed = 0
 
     def draw(self):
-        pyxel.cls(0) #efface l'ecran
+        pyxel.cls(0)
         pyxel.mouse(True)
-        pyxel.camera(self.Cam.x, self.Cam.y)
-        if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT): #fais dire au mc le texte quand on clic gauche
-            self.Mc.speak("je suis moi et uniquement moi mais appel moi par mon nom", "fr")
-        pyxel.rectb(self.Mc.x * self.Cam.zoom, self.Mc.y * self.Cam.zoom, self.Mc.HitBox_width * self.Cam.zoom, self.Mc.HitBox_height * self.Cam.zoom, 5)#dessinne le personnage
-        #pyxel.rectb(Mc.x + 3, Mc.y, Mc.HitBox_width+3, Mc.HitBox_height+4, 8) #hitbox
-        self.Mbloc.draw_all_blocs() #dessinne tout les blocs dans la liste de blocs (blocs[])
-        #pyxel.circb((self.Mc.x + 3.5) * self.Cam.zoom, (self.Mc.y + 6) * self.Cam.zoom, 50 * self.Cam.zoom, 5) #dessinne le rayon dans lequels les collsions seront chargées
-        pyxel.circ(5 + self.Cam.x, 5 + self.Cam.y, 5, self.state)
+        pyxel.camera(self.camera.x, self.camera.y)
+        if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+            self.character.speak(
+                "je suis moi et uniquement moi mais appel moi par mon nom",
+                "fr",
+            )
+        pyxel.rectb(
+            self.character.x * self.camera.zoom,
+            self.character.y * self.camera.zoom,
+            self.character.hitbox_width * self.camera.zoom,
+            self.character.hitbox_height * self.camera.zoom,
+            5,
+        )
+        self.block_manager.draw_all_blocks()
+        pyxel.circb(
+            (self.character.x + 3.5) * self.camera.zoom,
+            (self.character.y + 6) * self.camera.zoom,
+            50 * self.camera.zoom,
+            5,
+        )
 
 
-App()
+if __name__ == "__main__":
+    App()
