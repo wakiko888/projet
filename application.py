@@ -6,6 +6,7 @@ import world_rules
 
 class App:
     def __init__(self):
+        #initialisation et creation des instances de classes
         self.screen_x = 256
         self.screen_y = 256
 
@@ -23,7 +24,8 @@ class App:
         pyxel.load("LF.pyxres")
         pyxel.run(self.update, self.draw)
 
-    def update(self):
+    def update(self): #fonction update
+        #Controle joueur
         if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_Q):
             self.character.x_speed = -10
         if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_D):
@@ -33,6 +35,7 @@ class App:
         if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
             self.character.y_speed = +15
 
+        #controle de camera via la souris
         wheel_delta = pyxel.mouse_wheel
         if wheel_delta:
             old_zoom = self.camera.zoom
@@ -53,6 +56,7 @@ class App:
             self.camera.y += self.mouse.y - self.mouse.update_y
         self.mouse.actual_position()
 
+        #Aplication de gravité, friction, collision etc
         if self.character.is_on_top:
             friction = self.rules.ground_friction
         else:
@@ -155,7 +159,7 @@ class App:
             )
             self.character.x_speed = 0
 
-    def draw(self):
+    def draw(self): #fonction draw
         pyxel.cls(0)
         pyxel.mouse(True)
         pyxel.camera(self.camera.x, self.camera.y)
