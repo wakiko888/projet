@@ -166,3 +166,39 @@ class Mouse:
     def update_position(self) -> None:
         self.update_x = pyxel.mouse_x
         self.update_y = pyxel.mouse_y
+
+
+class TriggerZone:
+    def __init__(self, x, y, width, height, camera, flag):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.camera = camera
+        self.flag = flag
+
+    def draw(self):
+        pyxel.rectb(
+            self.x * self.camera.zoom,
+            self.y * self.camera.zoom,
+            self.width * self.camera.zoom,
+            self.height * self.camera.zoom,
+            5,
+            )
+
+class TriggerManager:
+    def __init__(self, camera):
+        self.zones = []
+        self.camera = camera
+        self.triggers = {
+        "Flag1":False,
+        "Flag2":False,
+        "Flag3":False
+        }
+
+    def set_trigger_zones(self, x, y, width, height):
+        self.zones.append(Block(x, y, width, height, self.camera))
+
+    def draw_all_blocks(self):
+        for zone in self.zones:
+            zone.draw()

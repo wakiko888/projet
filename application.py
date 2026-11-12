@@ -16,8 +16,9 @@ class App:
         self.block_manager = game_objects.BlocksManager(self.camera)
         self.world = game_objects.World(2, 3, 3, 7)
         self.rules = world_rules.Rules()
-        self.block_manager.set_block(12, 70, 50, 1)
+        self.block_manager.set_block(0, 70, 150, 1)
         self.block_manager.set_block(50, 85, 15, 10)
+        self.block_manager.set_block(100, 25, 50, 20)
         self.mouse = game_objects.Mouse()
 
         pyxel.init(self.screen_x, self.screen_y, title="LF")
