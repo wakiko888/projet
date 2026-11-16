@@ -1,6 +1,8 @@
 import pyxel
 
 
+
+
 class Character:
     def __init__(self, x, y, hitbox_width, hitbox_height, camera):
         self.x = x
@@ -17,6 +19,7 @@ class Character:
         self.load_collision_box_height = 60
         self.camera = camera
 
+
     def speak(self, text: str, language):
         pixels_per_line = 50
         pixels_on_line = 0
@@ -24,20 +27,25 @@ class Character:
         words_on_line = []
         lines = []
 
+
         for word in words:
             word_width = len(word) * 4
             if word_width + pixels_on_line <= pixels_per_line:
                 words_on_line.append(word)
                 pixels_on_line += word_width + 4
 
+
             else:
                 lines.append(" ".join(words_on_line))
                 words_on_line = [word]
                 pixels_on_line = word_width + 4
 
+
         lines.append(" ".join(words_on_line))
 
+
         start_y = self.y - len(lines) * 7
+
 
         for i, line_text in enumerate(lines):  # affiche chaque ligne de mots
             pyxel.text(
@@ -48,6 +56,8 @@ class Character:
             )
 
 
+
+
 class Block:
     def __init__(self, x, y, width, height, camera):
         self.x = x
@@ -55,6 +65,7 @@ class Block:
         self.width = width
         self.height = height
         self.camera = camera
+
 
     def draw(self):
         pyxel.rect(
@@ -66,17 +77,23 @@ class Block:
         )
 
 
+
+
 class BlocksManager:
     def __init__(self, camera):
         self.blocks: list[Block] = []
         self.camera = camera
 
+
     def set_block(self, x, y, width, height):
         self.blocks.append(Block(x, y, width, height, self.camera))
+
 
     def draw_all_blocks(self):
         for block in self.blocks:
             block.draw()
+
+
 
 
 class Collider:
@@ -106,6 +123,7 @@ class Collider:
             < 50
         )
 
+
     def rect_to_rect(
         self,
         object_1_x,
@@ -124,6 +142,7 @@ class Collider:
             and object_1_y < object_2_y + object_2_height
         )
 
+
     def point_to_rect(
         self, point_x, point_y, rect_x, rect_y, rect_width, rect_height
     ):
@@ -135,12 +154,16 @@ class Collider:
         )
 
 
+
+
 class World:
     def __init__(self, gravity, ground_friction, air_friction, fall_max_speed):
         self.gravity = gravity
         self.ground_friction = ground_friction
         self.air_friction = air_friction
         self.fall_max_speed = fall_max_speed
+
+
 
 
 class Camera:
@@ -150,6 +173,17 @@ class Camera:
         self.size_x = size_x
         self.size_y = size_y
         self.zoom = zoom
+   
+    def mode_fixe(x, y):
+        self.x = x
+        self.y = y
+
+
+    def mode_suivi(objet, offset_x, offset_y):
+        self.x = objet.x + offset_x
+        self.x = objet.y + offset_y
+
+
 
 
 class Mouse:
@@ -159,23 +193,30 @@ class Mouse:
         self.update_x = 0
         self.update_y = 0
 
+
     def actual_position(self) -> None:
         self.x = pyxel.mouse_x
         self.y = pyxel.mouse_y
+
 
     def update_position(self) -> None:
         self.update_x = pyxel.mouse_x
         self.update_y = pyxel.mouse_y
 
 
+
+
 class TriggerZone:
-    def __init__(self, x, y, width, height, camera, flag):
+    def __init__(self, x, y, width, height, camera, flag, **flag_settings):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.camera = camera
         self.flag = flag
+        self.flag_settings = flag_settings
+        self.__dict__.update(flag_settings)
+
 
     def draw(self):
         pyxel.rectb(
@@ -186,18 +227,20 @@ class TriggerZone:
             5,
             )
 
+
 class TriggerManager:
     def __init__(self, camera):
         self.zones = []
         self.camera = camera
         self.triggers = {
-        "Flag1":False,
-        "Flag2":False,
-        "Flag3":False
+
+
         }
 
-    def set_trigger_zones(self, x, y, width, height, flag):
-        self.zones.append(TriggerZone(x, y, width, height, self.camera, flag))
+
+    def set_trigger_zones(self, x, y, width, height, flag, **flag_settings):
+        self.zones.append(TriggerZone(x, y, width, height, self.camera, flag, **flag_settings))
+
 
     def draw_all_zones(self):
         for zone in self.zones:

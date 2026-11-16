@@ -1,7 +1,10 @@
 import pyxel
 
+
 import game_objects
 import world_rules
+
+
 
 
 class App:
@@ -9,6 +12,7 @@ class App:
         #initialisation et creation des instances de classes
         self.screen_x = 256
         self.screen_y = 256
+
 
         self.collider = game_objects.Collider()
         self.camera = game_objects.Camera(0, 0, 256, 256, 2)
@@ -23,9 +27,11 @@ class App:
         self.Trigger_manager = game_objects.TriggerManager(self.camera)
         self.Trigger_manager.set_trigger_zones(100, 50, 50, 25, "Flag1")
 
+
         pyxel.init(self.screen_x, self.screen_y, title="LF")
         pyxel.load("LF.pyxres")
         pyxel.run(self.update, self.draw)
+
 
     def update(self): #fonction update
         print(self.Trigger_manager.triggers["Flag1"])
@@ -38,6 +44,7 @@ class App:
             self.character.y_speed = -15
         if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
             self.character.y_speed = +15
+
 
         #controle de camera via la souris
         wheel_delta = pyxel.mouse_wheel
@@ -54,11 +61,13 @@ class App:
                 self.camera.y + pyxel.mouse_y
             ) * zoom_ratio - pyxel.mouse_y
 
+
         self.mouse.update_position()
         if pyxel.btn(pyxel.MOUSE_BUTTON_RIGHT):
             self.camera.x += self.mouse.x - self.mouse.update_x
             self.camera.y += self.mouse.y - self.mouse.update_y
         self.mouse.actual_position()
+
 
         #Aplication de gravité, friction, collision etc
         if self.character.is_on_top:
@@ -66,8 +75,10 @@ class App:
         else:
             friction = self.rules.air_friction
 
+
         if self.character.y_speed < self.rules.fall_max_speed:
             self.character.y_speed += self.rules.gravity
+
 
         if self.character.x_speed > friction:
             self.character.x_speed -= friction
@@ -76,7 +87,9 @@ class App:
         else:
             self.character.x_speed = 0
 
+
         self.character.y += self.character.y_speed
+
 
         for zone in self.Trigger_manager.zones:
             if self.collider.is_close_to_collide(
@@ -89,6 +102,7 @@ class App:
                 zone.width,
                 zone.height,
             ):
+
 
                 if self.collider.rect_to_rect(
                     self.character.x,
@@ -103,14 +117,17 @@ class App:
                     self.Trigger_manager.triggers[zone.flag] = True
                 else:
                     self.Trigger_manager.triggers[zone.flag] = False
-                    
+                   
             else:
                 self.Trigger_manager.triggers[zone.flag] = False
+
+
 
 
         self.character.is_colliding = False
         self.character.who_collide = "none"
         self.character.is_on_top = False
+
 
         for block in self.block_manager.blocks:
             if self.collider.is_close_to_collide(
@@ -138,11 +155,13 @@ class App:
                     self.character.is_on_top = self.character.y_speed > 0
                     break
 
+
         if self.character.is_colliding and self.character.y_speed > 0:
             self.character.y = (
                 self.character.who_collide.y - self.character.hitbox_height
             )
             self.character.y_speed = 0
+
 
         if self.character.is_colliding and self.character.y_speed < 0:
             self.character.y = (
@@ -151,7 +170,9 @@ class App:
             )
             self.character.y_speed = 0
 
+
         self.character.x += self.character.x_speed
+
 
         for zone in self.Trigger_manager.zones:
             if self.collider.is_close_to_collide(
@@ -164,6 +185,7 @@ class App:
                 zone.width,
                 zone.height,
             ):
+
 
                 if self.collider.rect_to_rect(
                     self.character.x,
@@ -178,13 +200,22 @@ class App:
                     self.Trigger_manager.triggers[zone.flag] = True
                 else:
                     self.Trigger_manager.triggers[zone.flag] = False
-                    
+                   
             else:
                 self.Trigger_manager.triggers[zone.flag] = False
 
 
+            if zone.flag == "Flag_cam_fixe":
+                self.camera.mode_fixe(zone.xf, zone.yf)
+
+
+            if zone.flag == "Flag_cam_suivi":
+                self.camera.mode_suivi(self.character,zone.offset_x,zone.offset_y)
+
+
         self.character.is_colliding = False
         self.character.who_collide = "none"
+
 
         for block in self.block_manager.blocks:
             if self.collider.is_close_to_collide(
@@ -211,17 +242,20 @@ class App:
                     self.character.who_collide = block
                     break
 
+
         if self.character.is_colliding and self.character.x_speed > 0:
             self.character.x = (
                 self.character.who_collide.x - self.character.hitbox_width
             )
             self.character.x_speed = 0
 
+
         if self.character.is_colliding and self.character.x_speed < 0:
             self.character.x = (
                 self.character.who_collide.x + self.character.who_collide.width
             )
             self.character.x_speed = 0
+
 
     def draw(self): #fonction draw
         pyxel.cls(0)
@@ -247,6 +281,8 @@ class App:
             5,
         )
         self.Trigger_manager.draw_all_zones()
+
+
 
 
 if __name__ == "__main__":
